@@ -29,6 +29,8 @@
 #include "FrameTimer.h"
 #include "Bencher.h"
 #include <fstream>
+#include "Rng.h"
+#include "Fruits.h"
 
 class Game
 {
@@ -51,5 +53,8 @@ private:
 	/*  User Variables              */
 	/********************************/
 	Bencher b;
+	Fruits f0 = (Vei2(200, 200));
+	Fruits f1{ Vei2(280, 200) };
+	Fruits f2{ Vei2(360, 200) };
 
 };
