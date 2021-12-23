@@ -16,9 +16,10 @@ Surface::Surface(const std::wstring& filename)
 {
 	gdi::Bitmap bitmap(filename.c_str());
 	
-	if (bitmap.GetLastStatus() != Gdiplus::Ok)	//string antaa data lose errorin, keksi korjaus
+	if (bitmap.GetLastStatus() != Gdiplus::Ok)
 	{
-		const std::string n (filename.begin(), filename.end());
+		std::string n;
+		std::transform(filename.begin(), filename.end(), std::back_inserter(n), [](wchar_t c) {return (char)c; });
 		throw std::runtime_error("Surface Unable to load file" + n);
 	}
 	

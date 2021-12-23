@@ -2,16 +2,16 @@
 #include "Vec2.h"
 #include "Surface.h"
 #include "Rng.h"
-#include "Keyboard.h"
 #include "Graphics.h"
 #include "Rect.h"
 
 class Fruits
 {
+	friend class Board;
 public:
 	Fruits(Vei2 pos);
 	void Draw(Graphics& gfx) const;
-	void Procces(Keyboard& kbd, int min, int max);
+	void Procces(int counter, int min, int max);
 	int GetFruit() const;
 private:
 

@@ -11,23 +11,41 @@ void Fruits::Draw(Graphics& gfx) const
 	gfx.DrawSprite(pos, picslice, fruitsheet, SpriteEffect::Chroma{ Colors::White });
 }
 
-void Fruits::Procces(Keyboard& kbd, int min, int max)
+void Fruits::Procces(int counter, int min, int max)
 {
-	int counter = 3;
 	//Fruit = rng.rngtest(min, max);
 
-	for (int i = 0; i < counter; i++)
+	if (counter == 0)
 	{
 		Fruit = rng.rngtest(min, max);
-		if (Fruit < 4)
+	}
+	else
+	{
+		for (int i = 0; i < counter; i++)
 		{
-			continue;
-		}
-		else
-		{
-			break;
+			Fruit = rng.rngtest(min, max);
+			if (Fruit < 2)
+			{
+				continue;
+			}
+			else if (Fruit >= 2 && Fruit < 4)
+			{
+				counter--;
+				continue;
+			}
+			else if (Fruit >= 4 && Fruit < 6)
+			{
+				counter -= 2;
+				
+				continue;
+			}
+			else
+			{
+				break;
+			}
 		}
 	}
+
 	currentXfruit = Fruit % width;
 	currentYfruit = Fruit / width;
 	rectpos = { currentXfruit * dim, currentYfruit * dim };

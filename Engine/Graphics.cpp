@@ -349,6 +349,32 @@ void Graphics::DrawRect(const RectI& rect, Color c)
 	DrawRect(rect.left, rect.top, rect.right, rect.bottom, c);
 }
 
+void Graphics::DrawRectLines(int x0, int y0, int x1, int y1, Color c)
+{
+	for (int x = x0; x < x1; x++)
+	{
+		PutPixel(x, y0, c);
+	}
+	for (int x = x0; x < x1; x++)
+	{
+		PutPixel(x, y1, c);
+	}
+
+	for (int y = y0; y < y1; y++)
+	{
+		PutPixel(x0, y, c);
+	}
+	for (int y = y0; y < y1; y++)
+	{
+		PutPixel(x1, y, c);
+	}
+}
+
+void Graphics::DrawRectLines(const RectF& rect, Color c)
+{
+	DrawRectLines((int)rect.left, (int)rect.top, (int)rect.right, (int)rect.bottom, c);
+}
+
 
 
 

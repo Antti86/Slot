@@ -49,27 +49,20 @@ void Game::UpdateModel(float dt)
 	const Keyboard::Event e = wnd.kbd.ReadKey();
 	if (e.IsPress() && e.GetCode() == VK_SPACE)
 	{
-		f0.Procces(wnd.kbd, 0, 7);
-		int f1min = f0.GetFruit() - 1;
-		int f1max = f0.GetFruit() + 1;
-		if (f1min < 0)
+		for (int i = 0; i < 1000000; i++)
 		{
-			f1min = 0;
+			brd.Update();
 		}
-		if (f1max > 7)
-		{
-			f1max = 7;
-		}
-		f1.Procces(wnd.kbd, f1min, f1max);
-		f2.Procces(wnd.kbd, f1min, f1max);
+		//brd.Update();
 	}
+
+
 
 }
 
 void Game::ComposeFrame()
 {
-	f0.Draw(gfx);
-	f1.Draw(gfx);
-	f2.Draw(gfx);
-
+	brd.Draw(gfx);
+	
+	
 }
