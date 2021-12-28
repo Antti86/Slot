@@ -49,11 +49,11 @@ void Game::UpdateModel(float dt)
 	const Keyboard::Event e = wnd.kbd.ReadKey();
 	if (e.IsPress() && e.GetCode() == VK_SPACE)
 	{
-		for (int i = 0; i < 1000000; i++)
-		{
-			brd.Update();
-		}
-		//brd.Update();
+		//for (int i = 0; i < 1000000; i++)
+		//{
+		//	brd.Update();
+		//}
+		brd.Update();
 	}
 
 

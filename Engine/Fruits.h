@@ -11,8 +11,11 @@ class Fruits
 public:
 	Fruits(Vei2 pos);
 	void Draw(Graphics& gfx) const;
-	void Procces(int counter, int min, int max);
+	void Procces(int counter, bool biggersheet);
 	int GetFruit() const;
+
+private:
+	int TranslateFruitVal();
 private:
 
 	Surface fruitsheet = { L"Kuvat//MeatSmall.png" };

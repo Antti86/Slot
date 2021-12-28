@@ -4,7 +4,7 @@ Board::Board(const Vei2 topleft)
 	:
 	topleft(topleft)
 {
-	winclass = { { 7, 4 }, {6, 8}, {5, 12}, {4, 20}, {3, 25}, {2, 50}, {1, 100}, {0, 200} };
+	winclass = { { 7, 3 }, {6, 5}, {5, 8}, {4, 14}, {3, 20}, {2, 30}, {1, 100}, {0, 200} };
 }
 
 void Board::Draw(Graphics& gfx) const
@@ -48,14 +48,28 @@ void Board::Draw(Graphics& gfx) const
 void Board::Update()
 {
 	int counter = 10;
-	int lastcounter = 1;
-	line0.Procces(counter, 0, 8);
-	line1.Procces(counter, 0, 8);
-	if (line0.GetFruit() == line1.GetFruit())
+	int lastcounter = 5;
+	line0.Procces(counter, true);
+	line1.Procces(counter, true);
+
+	if (line0.GetFruit() != line1.GetFruit())
 	{
-		//lastcounter = 3;
+		for (int i = 0; i < lastcounter; i++)
+		{
+			if (line0.GetFruit() != line1.GetFruit())
+			{
+				line1.Procces(counter, true);
+			}
+			else
+			{
+				break;
+			}
+		}
+		
 	}
-	line2.Procces(lastcounter, 0, 8);
+	line2.Procces(lastcounter, true);
+
+	
 	NumberOfrolls++;
 	if (CheckWin())
 	{
