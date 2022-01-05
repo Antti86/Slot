@@ -10,9 +10,11 @@ class Board
 {
 	
 public:
-	Board(const Vei2 topleft);
+	Board(const Vec2 topleft);
 	void Draw(Graphics& gfx) const;
-	void Update();
+	void Update(float dt);
+	void Timer(float dt);
+	bool rolling = false;
 private:
 	void DrawBorders(Graphics& gfx) const;
 
@@ -22,10 +24,10 @@ private:
 
 
 private:
-	Vei2 topleft;
-	Fruits line0{ Vei2(topleft.x + borderwidth, topleft.y + borderheight) };
-	Fruits line1{ Vei2(topleft.x + borderwidth + spacewidth, topleft.y + borderheight) };
-	Fruits line2{ Vei2(topleft.x + borderwidth + (spacewidth * 2), topleft.y + borderheight) };
+	Vec2 topleft;
+	Fruits line0{ Vec2(topleft.x + borderwidth, topleft.y + borderheight) };
+	Fruits line1{ Vec2(topleft.x + borderwidth + spacewidth, topleft.y + borderheight) };
+	Fruits line2{ Vec2(topleft.x + borderwidth + (spacewidth * 2), topleft.y + borderheight) };
 	Font font = { L"Kuvat//Consolas13x24.bmp" };
 	int bet = 1;
 	int money = 0;
@@ -44,5 +46,7 @@ private:
 	int range45 = 0;
 	int range67 = 0;
 	
-
+	float TimerStart = 0;
+	float TimerEnd = 5.0f;
+	
 };

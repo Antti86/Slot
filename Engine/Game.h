@@ -54,8 +54,8 @@ private:
 	/*  User Variables              */
 	/********************************/
 	Bencher b;
-	Board brd{Vei2 (100, 100) };
-
-
-
+	Board brd{Vec2(100.0f, 100.0f) };
+	float dt;
+	float elapsedtime;
+	
 };

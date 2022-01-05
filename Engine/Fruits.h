@@ -9,18 +9,18 @@ class Fruits
 {
 	
 public:
-	Fruits(Vei2 pos);
+	Fruits(Vec2 pos);
 	void Draw(Graphics& gfx) const;
 	void Procces();
 	int GetFruit() const;
-
+	void MoveFruit(float dt);
 private:
 	void CalculateFruitPos();
 	int TranslateFruitVal();
 private:
 
 	Surface fruitsheet = { L"Kuvat//MeatSmall.png" };
-	Vei2 pos;
+	Vec2 pos;
 	Rng rng;
 	int Fruit = 0;
 	int currentXfruit = 0;			//max 3
@@ -30,4 +30,5 @@ private:
 	static constexpr int dim = 70;
 	Vei2 rectpos = { currentXfruit * dim, currentYfruit * dim };
 	RectI picslice = RectI(rectpos, dim, dim);
+	float speed = 50.0f;
 };

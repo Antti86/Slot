@@ -32,10 +32,10 @@ void Game::Go()
 {
 	gfx.BeginFrame();
 
-	float elapsedtime = ft.Mark();
+	elapsedtime = ft.Mark();
 	while (elapsedtime > 0.0f)
 	{
-		float dt = std::min(0.0025f, elapsedtime);
+		dt = std::min(0.0025f, elapsedtime);
 		UpdateModel(dt);
 		elapsedtime -= dt;
 	}
@@ -53,9 +53,13 @@ void Game::UpdateModel(float dt)
 		//{
 		//	brd.Update();
 		//}
-		brd.Update();
+		brd.rolling = true;
+		brd.Update(dt);
 	}
-
+	if (brd.rolling)
+	{
+		brd.Timer(dt);
+	}
 
 
 }

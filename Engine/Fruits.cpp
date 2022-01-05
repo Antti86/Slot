@@ -1,6 +1,6 @@
 #include "Fruits.h"
 
-Fruits::Fruits(Vei2 pos)
+Fruits::Fruits(Vec2 pos)
 	:
 	pos(pos)
 {
@@ -8,7 +8,7 @@ Fruits::Fruits(Vei2 pos)
 
 void Fruits::Draw(Graphics& gfx) const
 {
-	gfx.DrawSprite(pos, picslice, fruitsheet, SpriteEffect::Chroma{ Colors::White });
+	gfx.DrawSprite((Vei2)pos, picslice, fruitsheet, SpriteEffect::Chroma{ Colors::White });
 }
 
 void Fruits::Procces()
@@ -24,6 +24,11 @@ void Fruits::Procces()
 int Fruits::GetFruit() const
 {
 	return Fruit;
+}
+
+void Fruits::MoveFruit(float dt)
+{
+	pos.y += speed * dt;
 }
 
 void Fruits::CalculateFruitPos()
