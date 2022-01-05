@@ -7,14 +7,15 @@
 
 class Fruits
 {
-	friend class Board;
+	
 public:
 	Fruits(Vei2 pos);
 	void Draw(Graphics& gfx) const;
-	void Procces(int counter, bool biggersheet);
+	void Procces();
 	int GetFruit() const;
 
 private:
+	void CalculateFruitPos();
 	int TranslateFruitVal();
 private:
 

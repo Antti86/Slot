@@ -47,18 +47,17 @@ void Board::Draw(Graphics& gfx) const
 
 void Board::Update()
 {
-	int counter = 10;
-	int lastcounter = 5;
-	line0.Procces(counter, true);
-	line1.Procces(counter, true);
+	int counter = 5;
+	line0.Procces();
+	line1.Procces();
 
 	if (line0.GetFruit() != line1.GetFruit())
 	{
-		for (int i = 0; i < lastcounter; i++)
+		for (int i = 0; i < counter; i++)
 		{
 			if (line0.GetFruit() != line1.GetFruit())
 			{
-				line1.Procces(counter, true);
+				line1.Procces();
 			}
 			else
 			{
@@ -67,13 +66,13 @@ void Board::Update()
 		}
 		
 	}
-	line2.Procces(lastcounter, true);
+	line2.Procces();
 
-	
+	money -= bet;
 	NumberOfrolls++;
 	if (CheckWin())
 	{
-		//money += 32;
+		
 		money += CalculateWin();
 		NumberOfWins++;
 		if (line0.GetFruit() < 2)
@@ -111,13 +110,6 @@ bool Board::CheckWin() const
 
 int Board::CalculateWin() const
 {
-	return winclass.find(line0.GetFruit())->second;
+	return winclass.find(line0.GetFruit())->second * bet;
 }
 
-void Board::CalculateFruitPos(Fruits& line)
-{
-	line.currentXfruit = line.Fruit % line.width;
-	line.currentYfruit = line.Fruit / line.width;
-	line.rectpos = { line.currentXfruit * line.dim, line.currentYfruit * line.dim };
-	line.picslice = RectI(line.rectpos, line.dim, line.dim);
-}

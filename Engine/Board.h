@@ -19,7 +19,6 @@ private:
 	bool CheckWin() const;
 	int CalculateWin() const;
 
-	void CalculateFruitPos(Fruits& line);
 
 
 private:
