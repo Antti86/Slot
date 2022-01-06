@@ -15,7 +15,7 @@ void Fruits::Procces()
 {
 	int min = 0;
 	int max = 20;
-
+	rolling = true;
 	Fruit = rng.rngtest(min, max);
 
 	CalculateFruitPos();
@@ -29,6 +29,25 @@ int Fruits::GetFruit() const
 void Fruits::MoveFruit(float dt)
 {
 	pos.y += speed * dt;
+}
+
+void Fruits::Timer(float dt, float TimerEnd)
+{
+	if ((TimerStart += dt) > TimerEnd)
+	{
+		TimerStart = 0.0f;
+		rolling = false;
+	}
+	else
+	{
+		MoveFruit(dt);
+		rolling = true;
+	}
+}
+
+bool Fruits::IsRolling() const
+{
+	return rolling;
 }
 
 void Fruits::CalculateFruitPos()

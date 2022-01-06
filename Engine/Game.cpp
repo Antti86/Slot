@@ -53,14 +53,10 @@ void Game::UpdateModel(float dt)
 		//{
 		//	brd.Update();
 		//}
-		brd.rolling = true;
-		brd.Update(dt);
-	}
-	if (brd.rolling)
-	{
-		brd.Timer(dt);
+		brd.Update();
 	}
 
+	brd.RollLines(dt);
 
 }
 

@@ -14,6 +14,8 @@ public:
 	void Procces();
 	int GetFruit() const;
 	void MoveFruit(float dt);
+	void Timer(float dt, float TimerEnd);
+	bool IsRolling() const;
 private:
 	void CalculateFruitPos();
 	int TranslateFruitVal();
@@ -30,5 +32,7 @@ private:
 	static constexpr int dim = 70;
 	Vei2 rectpos = { currentXfruit * dim, currentYfruit * dim };
 	RectI picslice = RectI(rectpos, dim, dim);
-	float speed = 50.0f;
+	float speed = 40.0f;
+	float TimerStart = 0;
+	bool rolling = false;
 };

@@ -1,6 +1,6 @@
 #include "Board.h"
 
-Board::Board(const Vec2 topleft)
+Board::Board(const Vei2 topleft)
 	:
 	topleft(topleft)
 {
@@ -45,7 +45,7 @@ void Board::Draw(Graphics& gfx) const
 	line2.Draw(gfx);
 }
 
-void Board::Update(float dt)
+void Board::Update()
 {
 	int counter = 5;
 
@@ -68,6 +68,7 @@ void Board::Update(float dt)
 		
 	}
 	line2.Procces();
+
 
 	money -= bet;
 	NumberOfrolls++;
@@ -95,18 +96,21 @@ void Board::Update(float dt)
 	}
 }
 
-void Board::Timer(float dt)
+void Board::RollLines(float dt)
 {
-	if ((TimerStart += dt) > TimerEnd)
+	if (line0.IsRolling())
 	{
-		TimerStart = 0.0f;
-		rolling = false;
+		line0.Timer(dt, 5.0f);
 	}
-	else
+	if (line1.IsRolling())
 	{
-		line0.MoveFruit(dt);
-		rolling = true;
+		line1.Timer(dt, 5.0f);
 	}
+	if (line2.IsRolling())
+	{
+		line2.Timer(dt, 5.0f);
+	}
+	
 }
 
 void Board::DrawBorders(Graphics& gfx) const
