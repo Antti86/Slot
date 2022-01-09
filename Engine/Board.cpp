@@ -7,7 +7,7 @@ Board::Board(const Vei2 topleft)
 	winclass = { { 7, 3 }, {6, 5}, {5, 8}, {4, 14}, {3, 20}, {2, 30}, {1, 100}, {0, 200} };
 }
 
-void Board::Draw(Graphics& gfx) const
+void Board::Draw(Graphics& gfx)
 {
 	std::string money1 = std::to_string(money);
 	std::string numrolls = std::to_string(NumberOfrolls);
@@ -40,9 +40,9 @@ void Board::Draw(Graphics& gfx) const
 		gfx, Colors::Green);
 	font.DrawTexts(r3, Vei2(topleft.x + width + borderwidth + (spacewidth * 3), topleft.y + (borderheight * 6)),
 		gfx, Colors::Green);
-	line0.Draw(gfx);
-	line1.Draw(gfx);
-	line2.Draw(gfx);
+	line0.Draw(gfx, *this);
+	line1.Draw(gfx, *this);
+	line2.Draw(gfx, *this);
 }
 
 void Board::Update()
@@ -113,9 +113,14 @@ void Board::RollLines(float dt)
 	
 }
 
+RectI Board::GetClippingRect() const
+{
+	return BorderRect;
+}
+
 void Board::DrawBorders(Graphics& gfx) const
 {
-	gfx.DrawRectLines(topleft.x, topleft.y, topleft.x + width, topleft.y + height, Colors::Blue);
+	gfx.DrawRectLines(BorderRect, Colors::Blue);
 }
 
 bool Board::CheckWin() const

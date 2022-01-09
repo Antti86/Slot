@@ -7,10 +7,10 @@
 
 class Fruits
 {
-	
+
 public:
 	Fruits(Vec2 pos);
-	void Draw(Graphics& gfx) const;
+	void Draw(Graphics& gfx, class Board& brd) const;
 	void Procces();
 	int GetFruit() const;
 	void MoveFruit(float dt);
@@ -35,4 +35,6 @@ private:
 	float speed = 40.0f;
 	float TimerStart = 0;
 	bool rolling = false;
+	static constexpr int min = 0;
+	static constexpr int max = 20;
 };

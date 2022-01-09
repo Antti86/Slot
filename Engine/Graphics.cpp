@@ -375,6 +375,11 @@ void Graphics::DrawRectLines(const RectF& rect, Color c)
 	DrawRectLines((int)rect.left, (int)rect.top, (int)rect.right, (int)rect.bottom, c);
 }
 
+void Graphics::DrawRectLines(const RectI& rect, Color c)
+{
+	DrawRectLines(rect.left, rect.top, rect.right, rect.bottom, c);
+}
+
 
 
 

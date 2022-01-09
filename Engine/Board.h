@@ -11,10 +11,10 @@ class Board
 	
 public:
 	Board(const Vei2 topleft);
-	void Draw(Graphics& gfx) const;
+	void Draw(Graphics& gfx);
 	void Update();
 	void RollLines(float dt);
-	
+	RectI GetClippingRect() const;
 private:
 	void DrawBorders(Graphics& gfx) const;
 
@@ -24,7 +24,7 @@ private:
 
 private:
 	const Vei2 topleft;
-	
+	const RectI BorderRect = { topleft.x, topleft.x + width, topleft.y, topleft.y + height };
 	Fruits line0{ Vec2(topleft.x + (float)borderwidth, topleft.y + (float)borderheight) };
 	Fruits line1{ Vec2(topleft.x + (float)borderwidth + (float)spacewidth, topleft.y + (float)borderheight) };
 	Fruits line2{ Vec2(topleft.x + (float)borderwidth + ((float)spacewidth * 2.0f), topleft.y + (float)borderheight) };

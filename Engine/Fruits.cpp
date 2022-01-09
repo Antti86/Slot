@@ -1,4 +1,5 @@
 #include "Fruits.h"
+#include "Board.h"
 
 Fruits::Fruits(Vec2 pos)
 	:
@@ -6,15 +7,13 @@ Fruits::Fruits(Vec2 pos)
 {
 }
 
-void Fruits::Draw(Graphics& gfx) const
+void Fruits::Draw(Graphics& gfx, class Board& brd) const
 {
-	gfx.DrawSprite((Vei2)pos, picslice, fruitsheet, SpriteEffect::Chroma{ Colors::White });
+	gfx.DrawSprite((Vei2)pos, picslice, brd.GetClippingRect(), fruitsheet, SpriteEffect::Chroma{ Colors::White });
 }
 
 void Fruits::Procces()
 {
-	int min = 0;
-	int max = 20;
 	rolling = true;
 	Fruit = rng.rngtest(min, max);
 
