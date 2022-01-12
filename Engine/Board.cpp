@@ -5,6 +5,16 @@ Board::Board(const Vei2 topleft)
 	topleft(topleft)
 {
 	winclass = { { 7, 3 }, {6, 5}, {5, 8}, {4, 14}, {3, 20}, {2, 30}, {1, 100}, {0, 200} };
+
+	for (int i = 0; i < 4; i++)
+	{
+		gfxline0.emplace_back(Line0Pos, rng.rngtest(0, 8));
+		gfxline1.emplace_back(Line1Pos, rng.rngtest(0, 8));
+		gfxline2.emplace_back(Line2Pos, rng.rngtest(0, 8));
+		Line0Pos.y += 70 + borderheight;
+		Line1Pos.y += 70 + borderheight;
+		Line2Pos.y += 70 + borderheight;
+	}
 }
 
 void Board::Draw(Graphics& gfx)
@@ -20,8 +30,8 @@ void Board::Draw(Graphics& gfx)
 
 	DrawBorders(gfx);
 
-	font.DrawTexts(bets, Vei2(topleft.x + spacewidth, topleft.y - borderheight), gfx, Colors::Green);
-	font.DrawTexts("BET", Vei2(topleft.x, topleft.y - borderheight), gfx, Colors::Green);
+	//font.DrawTexts(bets, Vei2(topleft.x + spacewidth, topleft.y - borderheight), gfx, Colors::Green);
+	//font.DrawTexts("BET", Vei2(topleft.x, topleft.y - borderheight), gfx, Colors::Green);
 
 	font.DrawTexts(money1, Vei2(topleft.x + width + borderwidth + spacewidth, topleft.y), gfx, Colors::Green);
 	font.DrawTexts("Money", Vei2(topleft.x + width + borderwidth, topleft.y), gfx, Colors::Green);
@@ -40,12 +50,22 @@ void Board::Draw(Graphics& gfx)
 		gfx, Colors::Green);
 	font.DrawTexts(r3, Vei2(topleft.x + width + borderwidth + (spacewidth * 3), topleft.y + (borderheight * 6)),
 		gfx, Colors::Green);
-	line0.Draw(gfx, *this);
-	line1.Draw(gfx, *this);
-	line2.Draw(gfx, *this);
+
+	for (auto& i : gfxline0)
+	{
+		i.Draw(gfx, *this);
+	}
+	for (auto& i : gfxline1)
+	{
+		i.Draw(gfx, *this);
+	}
+	for (auto& i : gfxline2)
+	{
+		i.Draw(gfx, *this);
+	}
 }
 
-void Board::Update()
+void Board::UpdateLogic()
 {
 	int counter = 5;
 
@@ -100,14 +120,31 @@ void Board::RollLines(float dt)
 {
 	if (line0.IsRolling())
 	{
+		for (auto& i : gfxline0)
+		{
+			i.MoveFruit(dt);
+			if (i.pos.y >= resetpos0.y)
+			{
+				i.pos = Startpos;
+				int sddfsdf = 0;
+			}
+		}
 		line0.Timer(dt, 5.0f);
 	}
 	if (line1.IsRolling())
 	{
+		for (auto& i : gfxline1)
+		{
+			i.MoveFruit(dt);
+		}
 		line1.Timer(dt, 5.0f);
 	}
 	if (line2.IsRolling())
 	{
+		for (auto& i : gfxline2)
+		{
+			i.MoveFruit(dt);
+		}
 		line2.Timer(dt, 5.0f);
 	}
 	
@@ -122,6 +159,8 @@ void Board::DrawBorders(Graphics& gfx) const
 {
 	gfx.DrawRectLines(BorderRect, Colors::Blue);
 }
+
+
 
 bool Board::CheckWin() const
 {

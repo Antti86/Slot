@@ -53,7 +53,7 @@ void Game::UpdateModel(float dt)
 		//{
 		//	brd.Update();
 		//}
-		brd.Update();
+		brd.UpdateLogic();
 	}
 
 	brd.RollLines(dt);

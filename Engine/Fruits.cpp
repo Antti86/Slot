@@ -1,15 +1,25 @@
 #include "Fruits.h"
 #include "Board.h"
 
-Fruits::Fruits(Vec2 pos)
+Fruits::Fruits(Vec2 pos)			//logig ctr
 	:
 	pos(pos)
 {
+	Fruit = 0;
+}
+
+Fruits::Fruits(Vec2 pos, int Fruit) //graphics ctr
+	:
+	pos(pos),
+	Fruit(Fruit)
+{
+	CalculateFruitPos();
 }
 
 void Fruits::Draw(Graphics& gfx, class Board& brd) const
 {
-	gfx.DrawSprite((Vei2)pos, picslice, brd.GetClippingRect(), fruitsheet, SpriteEffect::Chroma{ Colors::White });
+	//gfx.DrawSprite((Vei2)pos, picslice, brd.GetClippingRect(), fruitsheet, SpriteEffect::Chroma{ Colors::White });
+	gfx.DrawSprite((Vei2)pos, picslice, fruitsheet, SpriteEffect::NoChroma{});
 }
 
 void Fruits::Procces()
@@ -17,7 +27,7 @@ void Fruits::Procces()
 	rolling = true;
 	Fruit = rng.rngtest(min, max);
 
-	CalculateFruitPos();
+	
 }
 
 int Fruits::GetFruit() const
@@ -39,7 +49,7 @@ void Fruits::Timer(float dt, float TimerEnd)
 	}
 	else
 	{
-		MoveFruit(dt);
+		
 		rolling = true;
 	}
 }
@@ -47,6 +57,16 @@ void Fruits::Timer(float dt, float TimerEnd)
 bool Fruits::IsRolling() const
 {
 	return rolling;
+}
+
+int Fruits::GetFruitDim() const
+{
+	return dim;
+}
+
+Vec2& Fruits::GetPos()
+{
+	return pos;
 }
 
 void Fruits::CalculateFruitPos()
