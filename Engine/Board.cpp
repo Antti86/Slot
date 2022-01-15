@@ -29,7 +29,7 @@ void Board::Draw(Graphics& gfx)
 	std::string r3 = std::to_string(range67);
 
 	DrawBorders(gfx);
-
+	
 	//font.DrawTexts(bets, Vei2(topleft.x + spacewidth, topleft.y - borderheight), gfx, Colors::Green);
 	//font.DrawTexts("BET", Vei2(topleft.x, topleft.y - borderheight), gfx, Colors::Green);
 
@@ -50,17 +50,20 @@ void Board::Draw(Graphics& gfx)
 		gfx, Colors::Green);
 	font.DrawTexts(r3, Vei2(topleft.x + width + borderwidth + (spacewidth * 3), topleft.y + (borderheight * 6)),
 		gfx, Colors::Green);
-
+	gfx.DrawRect(topleft.x, winpos.y - 2, topleft.x + 330, winpos.y + 2, Colors::Red);
 	for (auto& i : gfxline0)
 	{
+		i.CalculateFruitPos();
 		i.Draw(gfx, *this);
 	}
 	for (auto& i : gfxline1)
 	{
+		i.CalculateFruitPos();
 		i.Draw(gfx, *this);
 	}
 	for (auto& i : gfxline2)
 	{
+		i.CalculateFruitPos();
 		i.Draw(gfx, *this);
 	}
 }
@@ -118,36 +121,108 @@ void Board::UpdateLogic()
 
 void Board::RollLines(float dt)
 {
+	
 	if (line0.IsRolling())
 	{
 		for (auto& i : gfxline0)
 		{
-			i.MoveFruit(dt);
-			if (i.pos.y >= resetpos0.y)
-			{
-				i.pos = Startpos;
-				int sddfsdf = 0;
-			}
+			i.speed = 700.0f;
 		}
-		line0.Timer(dt, 5.0f);
+		MoveLine(dt, gfxline0, Startpos0, resetpos0);
+		line0.Timer(dt, 1.0f);
+	}
+	else if (line0.slowtimer == true)
+	{
+		for (auto& i : gfxline0)
+		{
+			i.speed = 100.0f;
+		}
+		MoveLine(dt, gfxline0, Startpos0, resetpos0);
+		int frut = line0.GetFruit();
+		auto it = std::find_if(gfxline0.begin(), gfxline0.end(), [&frut](Fruits& l) {return l.GetFruit() == frut; });
+		if (it != gfxline0.end())
+		{
+			if (it->pos.y + 35 <= winpos.y - 1 && it->pos.y + 35 >= winpos.y + 1)
+			{
+				line0.slowtimer = true;
+			}
+			else
+			{
+				line0.slowtimer = false;
+
+			}
+
+		}
 	}
 	if (line1.IsRolling())
 	{
 		for (auto& i : gfxline1)
 		{
-			i.MoveFruit(dt);
+			i.speed = 700.0f;
 		}
-		line1.Timer(dt, 5.0f);
+		MoveLine(dt, gfxline1, Startpos1, resetpos1);
+		line1.Timer(dt, 2.0f);
+	}
+	else if (line1.slowtimer == true)
+	{
+		for (auto& i : gfxline1)
+		{
+			i.speed = 100.0f;
+		}
+		MoveLine(dt, gfxline1, Startpos1, resetpos1);
+		int frut = line1.GetFruit();
+		auto it = std::find_if(gfxline1.begin(), gfxline1.end(), [&frut](Fruits& l) {return l.GetFruit() == frut; });
+		if (it != gfxline1.end())
+		{
+			if (it->pos.y + 35 <= winpos.y - 1 && it->pos.y + 35 >= winpos.y + 1)
+			{
+				line1.slowtimer = true;
+			}
+			else
+			{
+				line1.slowtimer = false;
+
+			}
+
+		}
 	}
 	if (line2.IsRolling())
 	{
 		for (auto& i : gfxline2)
 		{
-			i.MoveFruit(dt);
+			i.speed = 700.0f;
 		}
-		line2.Timer(dt, 5.0f);
+		MoveLine(dt, gfxline2, Startpos2, resetpos2);
+		line2.Timer(dt, 3.0f);
 	}
-	
+	else if (line2.slowtimer == true)
+	{
+		for (auto& i : gfxline2)
+		{
+			i.speed = 100.0f;
+		}
+		MoveLine(dt, gfxline2, Startpos2, resetpos2);
+		int frut = line2.GetFruit();
+		auto it = std::find_if(gfxline2.begin(), gfxline2.end(), [&frut](Fruits& l) {return l.GetFruit() == frut; });
+		if (it != gfxline2.end())
+		{
+			if (it->pos.y + 35 <= winpos.y - 1 && it->pos.y + 35 >= winpos.y + 1)
+			{
+				line2.slowtimer = true;
+			}
+			else
+			{
+				line2.slowtimer = false;
+
+			}
+
+		}
+	}
+}
+
+void Board::SlowRollLines(float dt)
+{
+
 }
 
 RectI Board::GetClippingRect() const
@@ -174,5 +249,25 @@ bool Board::CheckWin() const
 int Board::CalculateWin() const
 {
 	return winclass.find(line0.GetFruit())->second * bet;
+}
+
+void Board::MoveLine(float dt, std::vector<Fruits>& line, const Vec2& StartPos, const Vec2& resetpos)
+{
+	for (auto& i : line)
+	{
+		i.MoveFruit(dt);
+		if (i.pos.y >= resetpos.y)
+		{
+
+			i.Fruit = rng.rngtest(0, 8);
+			float t = i.pos.y - 430.0f;
+
+			for (auto& s : line)
+			{
+				s.pos.y -= t;
+			}
+			i.pos = StartPos;
+		}
+	}
 }
 

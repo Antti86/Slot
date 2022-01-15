@@ -57,7 +57,6 @@ void Game::UpdateModel(float dt)
 	}
 
 	brd.RollLines(dt);
-
 }
 
 void Game::ComposeFrame()
