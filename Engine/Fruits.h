@@ -18,17 +18,19 @@ public:
 	void Timer(float dt, float TimerEnd);
 	bool IsRolling() const;
 	int GetFruitDim() const;
+	void CalculateFruitPos();
 	Vec2& GetPos();
 	Vec2 pos;
+	int Fruit;
 private:
-	void CalculateFruitPos();
+
 	int TranslateFruitVal();
 private:
 
 	Surface fruitsheet = { L"Kuvat//MeatSmall.png" };
 	
 	Rng rng;
-	int Fruit;
+	
 	int currentXfruit = 0;			//max 3
 	int currentYfruit = 0;			//max 4
 	static constexpr int width = 4;
@@ -36,7 +38,7 @@ private:
 	static constexpr int dim = 70;
 	Vei2 rectpos = { currentXfruit * dim, currentYfruit * dim };
 	RectI picslice = RectI(rectpos, dim, dim);
-	float speed = 120.0f;
+	float speed = 700.0f;
 	float TimerStart = 0;
 	bool rolling = false;
 	static constexpr int min = 0;

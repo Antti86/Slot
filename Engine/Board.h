@@ -20,18 +20,25 @@ private:
 	void DrawBorders(Graphics& gfx) const;
 	bool CheckWin() const;
 	int CalculateWin() const;
-
+	void DrawWinLine(Graphics& gfx) const;
 
 private:
 	const Vei2 topleft;
 	const RectI BorderRect = { topleft.x, topleft.x + width, topleft.y, topleft.y + height };
 
+	Vei2 WinLinePos = BorderRect.GetCenter();
+
 	Vec2 Line0Pos = { Vec2(topleft.x + (float)borderwidth, topleft.y - 70.0f) };
 	Vec2 Line1Pos = { Vec2(topleft.x + (float)borderwidth + (float)spacewidth, topleft.y - 70.0f )};
 	Vec2 Line2Pos = { Vec2(topleft.x + (float)borderwidth + ((float)spacewidth * 2.0f), topleft.y - 70.0f)};
 
-	Vec2 Startpos = { Vec2(topleft.x + (float)borderwidth, topleft.y - 70.0f) };
+	Vec2 Startpos0 = { Vec2(topleft.x + (float)borderwidth, topleft.y - 70.0f) };
+	Vec2 Startpos1 = { Vec2(topleft.x + (float)borderwidth + (float)spacewidth, topleft.y - 70.0f) };
+	Vec2 Startpos2 = { Vec2(topleft.x + (float)borderwidth + ((float)spacewidth * 2.0f), topleft.y - 70.0f) };
+
 	Vec2 resetpos0 = { Line0Pos.x, (float)topleft.y + (float)height  };
+	Vec2 resetpos1 = { Line0Pos.x, (float)topleft.y + (float)height };
+	Vec2 resetpos2 = { Line0Pos.x, (float)topleft.y + (float)height };
 
 	Fruits line0{ Line0Pos };
 	Fruits line1{ Line1Pos };

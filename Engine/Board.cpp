@@ -50,17 +50,20 @@ void Board::Draw(Graphics& gfx)
 		gfx, Colors::Green);
 	font.DrawTexts(r3, Vei2(topleft.x + width + borderwidth + (spacewidth * 3), topleft.y + (borderheight * 6)),
 		gfx, Colors::Green);
-
+	DrawWinLine(gfx);
 	for (auto& i : gfxline0)
 	{
+		i.CalculateFruitPos();
 		i.Draw(gfx, *this);
 	}
 	for (auto& i : gfxline1)
 	{
+		i.CalculateFruitPos();
 		i.Draw(gfx, *this);
 	}
 	for (auto& i : gfxline2)
 	{
+		i.CalculateFruitPos();
 		i.Draw(gfx, *this);
 	}
 }
@@ -122,30 +125,50 @@ void Board::RollLines(float dt)
 	{
 		for (auto& i : gfxline0)
 		{
-			i.MoveFruit(dt);
+			
 			if (i.pos.y >= resetpos0.y)
 			{
-				i.pos = Startpos;
-				int sddfsdf = 0;
+				Vec2 temp = i.pos;
+				float t = temp.y - 430.0f;
+				for (auto& s : gfxline0)
+				{
+					s.pos.y -= t;
+					
+				}
+				i.pos = Startpos0;
+				i.Fruit = rng.rngtest(0, 8);
 			}
+			i.MoveFruit(dt);
 		}
-		line0.Timer(dt, 5.0f);
+		line0.Timer(dt, 1.0f);
 	}
 	if (line1.IsRolling())
 	{
 		for (auto& i : gfxline1)
 		{
+			
+			if (i.pos.y >= resetpos1.y)
+			{
+				i.pos = Startpos1;
+				i.Fruit = rng.rngtest(0, 8);
+			}
 			i.MoveFruit(dt);
 		}
-		line1.Timer(dt, 5.0f);
+		line1.Timer(dt, 1.0f);
 	}
 	if (line2.IsRolling())
 	{
 		for (auto& i : gfxline2)
 		{
+			
+			if (i.pos.y >= resetpos2.y)
+			{
+				i.pos = Startpos2;
+				i.Fruit = rng.rngtest(0, 8);
+			}
 			i.MoveFruit(dt);
 		}
-		line2.Timer(dt, 5.0f);
+		line2.Timer(dt, 1.0f);
 	}
 	
 }
@@ -174,5 +197,10 @@ bool Board::CheckWin() const
 int Board::CalculateWin() const
 {
 	return winclass.find(line0.GetFruit())->second * bet;
+}
+
+void Board::DrawWinLine(Graphics& gfx) const
+{
+	gfx.DrawRect(BorderRect.left, WinLinePos.y - 2, BorderRect.right, WinLinePos.y + 2, Colors::Red);
 }
 

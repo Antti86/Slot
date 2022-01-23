@@ -26,7 +26,7 @@ void Fruits::Procces()
 {
 	rolling = true;
 	Fruit = rng.rngtest(min, max);
-
+	Fruit = TranslateFruitVal();
 	
 }
 
