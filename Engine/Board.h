@@ -11,17 +11,20 @@ class Board
 	
 public:
 	Board(const Vei2 topleft);
+	//Interface func
 	void Draw(Graphics& gfx);
 	void UpdateLogic();
-	void RollLines(float dt);
-	void UpdateGraphics();
-	RectI GetClippingRect() const;
+	void UpdateGraphics(float dt);
+
 private:
+
+	void RollLines(Fruits& line, std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float rolltime, float dt);
+	RectI GetClippingRect() const;
+
 	void DrawBorders(Graphics& gfx) const;
 	bool CheckWin() const;
 	int CalculateWin() const;
 	void DrawWinLine(Graphics& gfx) const;
-
 private:
 	const Vei2 topleft;
 	const RectI BorderRect = { topleft.x, topleft.x + width, topleft.y, topleft.y + height };

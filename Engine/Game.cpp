@@ -51,12 +51,12 @@ void Game::UpdateModel(float dt)
 	{
 		//for (int i = 0; i < 1000000; i++)
 		//{
-		//	brd.Update();
+		//	
 		//}
 		brd.UpdateLogic();
 	}
 
-	brd.RollLines(dt);
+	brd.UpdateGraphics(dt);
 
 }
 

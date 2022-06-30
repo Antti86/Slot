@@ -119,56 +119,67 @@ void Board::UpdateLogic()
 	}
 }
 
-void Board::RollLines(float dt)
+void Board::UpdateGraphics(float dt)
 {
-	if (line0.IsRolling())
+	RollLines(line0, gfxline0, Startpos0, resetpos0, 2.0f, dt);
+	RollLines(line1, gfxline1, Startpos1, resetpos1, 2.0f, dt);
+	RollLines(line2, gfxline2, Startpos2, resetpos2, 2.0f, dt);
+
+}
+
+void Board::RollLines(Fruits& line, std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float rolltime, float dt)
+{
+	if (line.GetRollStatus() == Fruits::Rollstatus::Fast)
 	{
-		for (auto& i : gfxline0)
+		for (auto& i : gfxline)
 		{
-			
-			if (i.pos.y >= resetpos0.y)
-			{
-				Vec2 temp = i.pos;
-				float t = temp.y - 430.0f;
-				for (auto& s : gfxline0)
-				{
-					s.pos.y -= t;
-					
-				}
-				i.pos = Startpos0;
-				i.Fruit = rng.rngtest(0, 8);
-			}
-			i.MoveFruit(dt);
+			i.SetSpeed(700.0f);
+			i.MoveLine(gfxline, StartPos, resetpos, dt);
 		}
-		line0.Timer(dt, 1.0f);
+		line.Timer(dt, rolltime);
 	}
-	if (line1.IsRolling())
+	else if (line.GetRollStatus() == Fruits::Rollstatus::Slow)
 	{
-		for (auto& i : gfxline1)
+		
+		for (auto& i : gfxline)
 		{
-			
-			if (i.pos.y >= resetpos1.y)
-			{
-				i.pos = Startpos1;
-				i.Fruit = rng.rngtest(0, 8);
-			}
-			i.MoveFruit(dt);
+			i.SetSpeed(100.0f);
+			i.MoveLine(gfxline, StartPos, resetpos, dt);
 		}
-		line1.Timer(dt, 1.0f);
-	}
-	if (line2.IsRolling())
-	{
-		for (auto& i : gfxline2)
+		for (auto& i : gfxline)
 		{
-			
-			if (i.pos.y >= resetpos2.y)
+			if (i.GetGFXFruit() == line.GetFruit() && i.GetPos().y + 35 >= WinLinePos.y - 1 && i.GetPos().y + 35 <= WinLinePos.y + 1)
 			{
-				i.pos = Startpos2;
-				i.Fruit = rng.rngtest(0, 8);
+				line.rollstatus = Fruits::Rollstatus::Stop;
 			}
-			i.MoveFruit(dt);
 		}
-		line2.Timer(dt, 1.0f);
+
+
+
+		//if (std::any_of(gfxline.begin(), gfxline.end(), [&](Fruits& s)
+		//{
+		//	return s.GfxstopTag && (s.GetPos().y + 35 <= WinLinePos.y - 1 && s.GetPos().y + 35 <= WinLinePos.y + 1);
+		//}))
+		//{
+		//	line.rollstatus = Fruits::Rollstatus::Stop;
+		//}
+
+
+
+
+		//auto it = std::find_if(gfxline.begin(), gfxline.end(), [&frut](Fruits& l) {return l.GetGFXFruit() == frut; });
+		//if (it != gfxline.end())
+		//{
+		//	if (it->GetPos().y + 35 <= WinLinePos.y - 10 && it->GetPos().y + 35 >= WinLinePos.y + 10)
+		//	{
+		//		line.rollstatus = Fruits::Rollstatus::Stop;
+		//	}
+		//}
+		//if (line.TimerTest(dt, 4.0f))
+		//{
+		//	line.rollstatus = Fruits::Rollstatus::Stop;
+		//}
+
 	}
 	
 }
