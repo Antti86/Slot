@@ -121,13 +121,13 @@ void Board::UpdateLogic()
 
 void Board::UpdateGraphics(float dt)
 {
-	RollLines(line0, gfxline0, Startpos0, resetpos0, 2.0f, dt);
-	RollLines(line1, gfxline1, Startpos1, resetpos1, 2.0f, dt);
-	RollLines(line2, gfxline2, Startpos2, resetpos2, 2.0f, dt);
+	RollLines(line0, nullptr, gfxline0, Startpos0, resetpos0, 2.0f, dt);
+	RollLines(line1, &line0, gfxline1, Startpos1, resetpos1, 2.0f, dt);
+	RollLines(line2, &line1, gfxline2, Startpos2, resetpos2, 2.0f, dt);
 
 }
 
-void Board::RollLines(Fruits& line, std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float rolltime, float dt)
+void Board::RollLines(Fruits& line, Fruits* lastline, std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float rolltime, float dt)
 {
 	if (line.GetRollStatus() == Fruits::Rollstatus::Fast)
 	{
@@ -136,14 +136,25 @@ void Board::RollLines(Fruits& line, std::vector<Fruits>& gfxline, const Vec2& St
 			i.SetSpeed(700.0f);
 			i.MoveLine(gfxline, StartPos, resetpos, dt);
 		}
-		line.Timer(dt, rolltime);
+		if (line.TimerTest(dt, rolltime))
+		{
+			if (lastline == nullptr)
+			{
+				line.rollstatus = Fruits::Rollstatus::Slow;
+			}
+			else if (lastline->GetRollStatus() == Fruits::Rollstatus::Stop)
+			{
+				line.rollstatus = Fruits::Rollstatus::Slow;
+			}
+			
+		}
 	}
 	else if (line.GetRollStatus() == Fruits::Rollstatus::Slow)
 	{
 		
 		for (auto& i : gfxline)
 		{
-			i.SetSpeed(100.0f);
+			i.SetSpeed(300.0f);
 			i.MoveLine(gfxline, StartPos, resetpos, dt);
 		}
 		for (auto& i : gfxline)
@@ -153,32 +164,6 @@ void Board::RollLines(Fruits& line, std::vector<Fruits>& gfxline, const Vec2& St
 				line.rollstatus = Fruits::Rollstatus::Stop;
 			}
 		}
-
-
-
-		//if (std::any_of(gfxline.begin(), gfxline.end(), [&](Fruits& s)
-		//{
-		//	return s.GfxstopTag && (s.GetPos().y + 35 <= WinLinePos.y - 1 && s.GetPos().y + 35 <= WinLinePos.y + 1);
-		//}))
-		//{
-		//	line.rollstatus = Fruits::Rollstatus::Stop;
-		//}
-
-
-
-
-		//auto it = std::find_if(gfxline.begin(), gfxline.end(), [&frut](Fruits& l) {return l.GetGFXFruit() == frut; });
-		//if (it != gfxline.end())
-		//{
-		//	if (it->GetPos().y + 35 <= WinLinePos.y - 10 && it->GetPos().y + 35 >= WinLinePos.y + 10)
-		//	{
-		//		line.rollstatus = Fruits::Rollstatus::Stop;
-		//	}
-		//}
-		//if (line.TimerTest(dt, 4.0f))
-		//{
-		//	line.rollstatus = Fruits::Rollstatus::Stop;
-		//}
 
 	}
 	

@@ -19,8 +19,8 @@ Fruits::Fruits(Vec2 pos, int GfxFruit) //graphics ctr
 
 void Fruits::Draw(Graphics& gfx, class Board& brd) const
 {
-	//gfx.DrawSprite((Vei2)pos, picslice, brd.GetClippingRect(), fruitsheet, SpriteEffect::Chroma{ Colors::White });
-	gfx.DrawSprite((Vei2)pos, picslice, fruitsheet, SpriteEffect::NoChroma{});
+	gfx.DrawSprite((Vei2)pos, picslice, brd.GetClippingRect(), fruitsheet, SpriteEffect::Chroma{ Colors::White });
+	/*gfx.DrawSprite((Vei2)pos, picslice, fruitsheet, SpriteEffect::NoChroma{});*/
 }
 
 void Fruits::Procces()
@@ -88,6 +88,14 @@ void Fruits::MoveLine(std::vector<Fruits>& gfxline, const Vec2& StartPos, const 
 	MoveFruit(dt);
 	if (pos.y >= resetpos.y)
 	{
+		if (TimerTest(dt, 2.0f))
+		{
+			GfxFruit = Fruit;
+		}
+		else
+		{
+			GfxFruit = rng.rngtest(min, max);
+		}
 		
 		float t = pos.y - 430.0f;
 		for (auto& s : gfxline)

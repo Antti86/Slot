@@ -15,11 +15,11 @@ public:
 	void Draw(Graphics& gfx);
 	void UpdateLogic();
 	void UpdateGraphics(float dt);
-
+	RectI GetClippingRect() const;
 private:
 
-	void RollLines(Fruits& line, std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float rolltime, float dt);
-	RectI GetClippingRect() const;
+	void RollLines(Fruits& line, Fruits* lastline, std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float rolltime, float dt);
+
 
 	void DrawBorders(Graphics& gfx) const;
 	bool CheckWin() const;

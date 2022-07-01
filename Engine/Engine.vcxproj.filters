@@ -87,6 +87,9 @@
     <ClInclude Include="Fruits.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="InputControl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DXErr.cpp">
