@@ -24,7 +24,8 @@
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
-	gfx( wnd )
+	gfx( wnd ),
+	Ic ( brd )
 {
 }
 
@@ -46,16 +47,22 @@ void Game::Go()
 
 void Game::UpdateModel(float dt)
 {
-	const Keyboard::Event e = wnd.kbd.ReadKey();
-	if (e.IsPress() && e.GetCode() == VK_SPACE)
+	Keyboard::Event ke = wnd.kbd.ReadKey();
+	Mouse::Event me = wnd.mouse.Read();
+	//if (e.IsPress() && e.GetCode() == VK_SPACE)
+	//{
+	//	//for (int i = 0; i < 1000000; i++)
+	//	//{
+	//	//	
+	//	//}
+	//	brd.UpdateLogic();
+	//}
+
+	if (Ic.RollActivation(brd, me, ke))
 	{
-		//for (int i = 0; i < 1000000; i++)
-		//{
-		//	
-		//}
 		brd.UpdateLogic();
 	}
-
+	Ic.ChangeBet(brd, me, ke);
 	brd.UpdateGraphics(dt);
 
 }
@@ -63,6 +70,6 @@ void Game::UpdateModel(float dt)
 void Game::ComposeFrame()
 {
 	brd.Draw(gfx);
-	
+	Ic.Draw(gfx);
 	
 }

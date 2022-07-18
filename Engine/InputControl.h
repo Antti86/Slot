@@ -7,10 +7,12 @@
 class InputCtrl
 {
 public:
-
-	bool RollActivation(const Mouse& m, const Keyboard& kbd);
-
+	InputCtrl(Board& brd);
+	void Draw(Graphics& gfx) const;
+	bool RollActivation(Board& brd, Mouse::Event& me, Keyboard::Event& ke) const;
+	void ChangeBet(Board& brd, Mouse::Event& me, Keyboard::Event& ke);
 private:
-	
+	Vec2 RollBpos;
+	RectF RollB;
 
 };

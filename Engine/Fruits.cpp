@@ -1,19 +1,13 @@
 #include "Fruits.h"
 #include "Board.h"
 
-Fruits::Fruits(Vec2 pos)			//logig ctr
-	:
-	pos(pos)
-{
-	Fruit = 0;
-}
+
 
 Fruits::Fruits(Vec2 pos, int GfxFruit) //graphics ctr
 	:
 	pos(pos),
 	GfxFruit(GfxFruit)
 {
-	Fruit = 0;
 	CalculateFruitPos();
 }
 
@@ -28,7 +22,6 @@ void Fruits::Procces()
 	rollstatus = Rollstatus::Fast;
 	Fruit = rng.rngtest(min, max);
 	Fruit = TranslateFruitVal(Fruit);
-	
 }
 
 int Fruits::GetFruit() const
@@ -46,16 +39,16 @@ void Fruits::MoveFruit(float dt)
 	pos.y += speed * dt;
 }
 
-void Fruits::Timer(float dt, float TimerEnd)
+bool Fruits::Timer(float dt, float TimerEnd)
 {
 	if ((TimerStart += dt) > TimerEnd)
 	{
 		TimerStart = 0.0f;
-		rollstatus = Rollstatus::Slow;
+		return true;
 	}
 	else
 	{
-		rollstatus = Rollstatus::Fast;
+		return false;
 	}
 }
 
@@ -83,14 +76,23 @@ void Fruits::CalculateFruitPos()
 	picslice = RectI(rectpos, dim, dim);
 }
 
-void Fruits::MoveLine(std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float dt)
+void Fruits::MoveLine(Fruits& line, std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float dt)
 {
 	MoveFruit(dt);
-	if (pos.y >= resetpos.y)
+	if (pos.y >= resetpos.y) // checks if fruit gone out of the board
 	{
-		if (TimerTest(dt, 2.0f))
+		if (line.rollstatus == Rollstatus::Slow) //if slow mode, this block makes sure that right fruit appear after 7 fails
 		{
-			GfxFruit = Fruit;
+			if (line.testcounter == 7)
+			{
+				GfxFruit = line.Fruit;
+				line.testcounter = 0;
+			}
+			else
+			{
+				GfxFruit = rng.rngtest(min, max);
+				line.testcounter += 1;
+			}
 		}
 		else
 		{
@@ -98,11 +100,11 @@ void Fruits::MoveLine(std::vector<Fruits>& gfxline, const Vec2& StartPos, const 
 		}
 		
 		float t = pos.y - 430.0f;
-		for (auto& s : gfxline)
+		for (auto& s : gfxline)	//Correcting fruit line position, no caps appearing between fruits
 		{
 			s.pos.y -= t;
 		}
-		pos = StartPos;
+		pos = StartPos;		//Moving fruit back to the top
 	}
 }
 
@@ -111,18 +113,6 @@ void Fruits::SetSpeed(float s)
 	speed = s;
 }
 
-bool Fruits::TimerTest(float dt, float TimerEnd)
-{
-	if ((TimerStart1 += dt) > TimerEnd)
-	{
-		TimerStart1 = 0.0f;
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
 
 int Fruits::TranslateFruitVal(int f)
 {

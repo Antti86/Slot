@@ -152,6 +152,7 @@
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="InputControl.h" />
     <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="LineLogic.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="MenuScreens.h" />
     <ClInclude Include="Mouse.h" />
@@ -173,6 +174,7 @@
     <ClCompile Include="GDIManager.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="GraphicsOd.cpp" />
+    <ClCompile Include="InputControl.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainWindow.cpp" />

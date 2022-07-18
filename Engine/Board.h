@@ -15,15 +15,18 @@ public:
 	void Draw(Graphics& gfx);
 	void UpdateLogic();
 	void UpdateGraphics(float dt);
+	//Getters
+	Vec2 GetPos() const;
 	RectI GetClippingRect() const;
+
+	bool AllStop() const;
+	void SetBet(char plus_minus); //Incr or Decr bet based on parameter "+", "-"
 private:
-
-	void RollLines(Fruits& line, Fruits* lastline, std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float rolltime, float dt);
-
-
+	//Rolling checks and logig
+	void RollLines(Fruits& line, Fruits* previous, std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float rolltime, float dt);
 	void DrawBorders(Graphics& gfx) const;
 	bool CheckWin() const;
-	int CalculateWin() const;
+	int CalculateWin() const; //Dont call this without CheckWin first
 	void DrawWinLine(Graphics& gfx) const;
 private:
 	const Vei2 topleft;
@@ -43,9 +46,9 @@ private:
 	Vec2 resetpos1 = { Line0Pos.x, (float)topleft.y + (float)height };
 	Vec2 resetpos2 = { Line0Pos.x, (float)topleft.y + (float)height };
 
-	Fruits line0{ Line0Pos };
-	Fruits line1{ Line1Pos };
-	Fruits line2{ Line2Pos };
+	Fruits line0;
+	Fruits line1;
+	Fruits line2;
 
 	std::vector<Fruits> gfxline0;
 	std::vector<Fruits> gfxline1;

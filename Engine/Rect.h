@@ -32,7 +32,10 @@ public:
 		return right > other.left && left < other.right
 			&& bottom > other.top && top < other.bottom;
 	}
-
+	bool IsInside(const Vec2_<T> point) const
+	{
+		return point.x >= left && point.x <= right&& point.y >= top && point.y <= bottom;
+	}
 	static Rect_ FromCenter(const Vec2_<T>& center, T halfWidth, T halfHeight)
 	{
 		const Vec2_<T> half(halfWidth, halfHeight);

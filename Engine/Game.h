@@ -32,6 +32,7 @@
 #include "Rng.h"
 #include "Font.h"
 #include "Board.h"
+#include "InputControl.h"
 
 class Game
 {
@@ -55,6 +56,7 @@ private:
 	/********************************/
 	Bencher b;
 	Board brd{Vec2(100.0f, 100.0f) };
+	InputCtrl Ic;
 	float dt;
 	float elapsedtime;
 	

@@ -30,8 +30,8 @@ void Board::Draw(Graphics& gfx)
 
 	DrawBorders(gfx);
 
-	//font.DrawTexts(bets, Vei2(topleft.x + spacewidth, topleft.y - borderheight), gfx, Colors::Green);
-	//font.DrawTexts("BET", Vei2(topleft.x, topleft.y - borderheight), gfx, Colors::Green);
+	font.DrawTexts(bets, Vei2(topleft.x + spacewidth, topleft.y - borderheight), gfx, Colors::Green);
+	font.DrawTexts("BET", Vei2(topleft.x, topleft.y - borderheight), gfx, Colors::Green);
 
 	font.DrawTexts(money1, Vei2(topleft.x + width + borderwidth + spacewidth, topleft.y), gfx, Colors::Green);
 	font.DrawTexts("Money", Vei2(topleft.x + width + borderwidth, topleft.y), gfx, Colors::Green);
@@ -75,7 +75,7 @@ void Board::UpdateLogic()
 	line0.Procces();
 	line1.Procces();
 
-	if (line0.GetFruit() != line1.GetFruit())
+	if (line0.GetFruit() != line1.GetFruit()) //Increasing odds to have same fruit in lines 0 and 1
 	{
 		for (int i = 0; i < counter; i++)
 		{
@@ -92,15 +92,14 @@ void Board::UpdateLogic()
 	}
 	line2.Procces();
 
-
 	money -= bet;
 	NumberOfrolls++;
 	if (CheckWin())
 	{
-		
 		money += CalculateWin();
+		//Statics
 		NumberOfWins++;
-		if (line0.GetFruit() < 2)
+		if (line0.GetFruit() < 2) 
 		{
 			range01++;
 		}
@@ -127,51 +126,78 @@ void Board::UpdateGraphics(float dt)
 
 }
 
-void Board::RollLines(Fruits& line, Fruits* lastline, std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float rolltime, float dt)
+Vec2 Board::GetPos() const
+{
+	return Vec2((float)topleft.x, (float)topleft.y);
+}
+
+void Board::RollLines(Fruits& line, Fruits* previous, std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float rolltime, float dt)
 {
 	if (line.GetRollStatus() == Fruits::Rollstatus::Fast)
 	{
-		for (auto& i : gfxline)
+		for (auto& i : gfxline) //Moving all the fruits
 		{
 			i.SetSpeed(700.0f);
-			i.MoveLine(gfxline, StartPos, resetpos, dt);
+			i.MoveLine(line, gfxline, StartPos, resetpos, dt);
 		}
-		if (line.TimerTest(dt, rolltime))
+		if (line.Timer(dt, rolltime)) //Checks when it´s time to go slow
 		{
-			if (lastline == nullptr)
+			//Makes sure that lines stops in order 0, 1, 2
+			if (previous == nullptr) //if it´s line 0, go slow immediately after the timer runs out
 			{
 				line.rollstatus = Fruits::Rollstatus::Slow;
 			}
-			else if (lastline->GetRollStatus() == Fruits::Rollstatus::Stop)
+			else if (previous->GetRollStatus() == Fruits::Rollstatus::Stop) // if not line 0, checks that previous line have stopped before going slow
 			{
 				line.rollstatus = Fruits::Rollstatus::Slow;
 			}
-			
 		}
 	}
 	else if (line.GetRollStatus() == Fruits::Rollstatus::Slow)
 	{
-		
-		for (auto& i : gfxline)
+		for (auto& i : gfxline) //Moving all the fruits
 		{
 			i.SetSpeed(300.0f);
-			i.MoveLine(gfxline, StartPos, resetpos, dt);
+			i.MoveLine(line, gfxline, StartPos, resetpos, dt);
 		}
-		for (auto& i : gfxline)
+		for (auto& i : gfxline) //Checks that the logig fruit is the same as graphics fruit and that gfx fruit is in the winline
 		{
 			if (i.GetGFXFruit() == line.GetFruit() && i.GetPos().y + 35 >= WinLinePos.y - 1 && i.GetPos().y + 35 <= WinLinePos.y + 1)
 			{
 				line.rollstatus = Fruits::Rollstatus::Stop;
 			}
 		}
-
 	}
-	
 }
 
 RectI Board::GetClippingRect() const
 {
 	return BorderRect;
+}
+
+bool Board::AllStop() const
+{
+	if (line0.GetRollStatus() == Fruits::Rollstatus::Stop && line1.GetRollStatus() == Fruits::Rollstatus::Stop &&
+		line2.GetRollStatus() == Fruits::Rollstatus::Stop)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void Board::SetBet(char plus_minus)
+{
+	if (bet > 1 && plus_minus == '-')
+	{
+		bet -= 1;
+	}
+	if (bet < 5 && plus_minus == '+')
+	{
+		bet += 1;
+	}
 }
 
 void Board::DrawBorders(Graphics& gfx) const
