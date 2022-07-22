@@ -149,6 +149,9 @@
     <ClCompile Include="InputControl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LineLogic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FramebufferPS.hlsl">

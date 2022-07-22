@@ -8,9 +8,9 @@ Board::Board(const Vei2 topleft)
 
 	for (int i = 0; i < 4; i++)
 	{
-		gfxline0.emplace_back(Line0Pos, rng.rngtest(0, 8));
-		gfxline1.emplace_back(Line1Pos, rng.rngtest(0, 8));
-		gfxline2.emplace_back(Line2Pos, rng.rngtest(0, 8));
+		gfxline0.emplace_back(Fruits(Line0Pos, rng.rngtest(0, 8)));
+		gfxline1.emplace_back(Fruits(Line1Pos, rng.rngtest(0, 8)));
+		gfxline2.emplace_back(Fruits(Line2Pos, rng.rngtest(0, 8)));
 		Line0Pos.y += 70 + borderheight;
 		Line1Pos.y += 70 + borderheight;
 		Line2Pos.y += 70 + borderheight;
@@ -123,7 +123,6 @@ void Board::UpdateGraphics(float dt)
 	RollLines(line0, nullptr, gfxline0, Startpos0, resetpos0, 2.0f, dt);
 	RollLines(line1, &line0, gfxline1, Startpos1, resetpos1, 2.0f, dt);
 	RollLines(line2, &line1, gfxline2, Startpos2, resetpos2, 2.0f, dt);
-
 }
 
 Vec2 Board::GetPos() const
@@ -131,40 +130,40 @@ Vec2 Board::GetPos() const
 	return Vec2((float)topleft.x, (float)topleft.y);
 }
 
-void Board::RollLines(Fruits& line, Fruits* previous, std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float rolltime, float dt)
+void Board::RollLines(LineLogic& line, LineLogic* previous, std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float rolltime, float dt)
 {
-	if (line.GetRollStatus() == Fruits::Rollstatus::Fast)
+	if (line.rollstatus == LineLogic::Rollstatus::Fast)
 	{
+		MoveLine(line, gfxline, StartPos, resetpos, dt);
 		for (auto& i : gfxline) //Moving all the fruits
 		{
 			i.SetSpeed(700.0f);
-			i.MoveLine(line, gfxline, StartPos, resetpos, dt);
 		}
 		if (line.Timer(dt, rolltime)) //Checks when it´s time to go slow
 		{
 			//Makes sure that lines stops in order 0, 1, 2
 			if (previous == nullptr) //if it´s line 0, go slow immediately after the timer runs out
 			{
-				line.rollstatus = Fruits::Rollstatus::Slow;
+				line.rollstatus = LineLogic::Rollstatus::Slow;
 			}
-			else if (previous->GetRollStatus() == Fruits::Rollstatus::Stop) // if not line 0, checks that previous line have stopped before going slow
+			else if (previous->rollstatus == LineLogic::Rollstatus::Stop) // if not line 0, checks that previous line have stopped before going slow
 			{
-				line.rollstatus = Fruits::Rollstatus::Slow;
+				line.rollstatus = LineLogic::Rollstatus::Slow;
 			}
 		}
 	}
-	else if (line.GetRollStatus() == Fruits::Rollstatus::Slow)
+	else if (line.rollstatus == LineLogic::Rollstatus::Slow)
 	{
+		MoveLine(line, gfxline, StartPos, resetpos, dt);
 		for (auto& i : gfxline) //Moving all the fruits
 		{
 			i.SetSpeed(300.0f);
-			i.MoveLine(line, gfxline, StartPos, resetpos, dt);
 		}
 		for (auto& i : gfxline) //Checks that the logig fruit is the same as graphics fruit and that gfx fruit is in the winline
 		{
-			if (i.GetGFXFruit() == line.GetFruit() && i.GetPos().y + 35 >= WinLinePos.y - 1 && i.GetPos().y + 35 <= WinLinePos.y + 1)
+			if (i.GfxFruit == line.GetFruit() && i.GetPos().y + 35 >= WinLinePos.y - 1 && i.GetPos().y + 35 <= WinLinePos.y + 1)
 			{
-				line.rollstatus = Fruits::Rollstatus::Stop;
+				line.rollstatus = LineLogic::Rollstatus::Stop;
 			}
 		}
 	}
@@ -177,8 +176,8 @@ RectI Board::GetClippingRect() const
 
 bool Board::AllStop() const
 {
-	if (line0.GetRollStatus() == Fruits::Rollstatus::Stop && line1.GetRollStatus() == Fruits::Rollstatus::Stop &&
-		line2.GetRollStatus() == Fruits::Rollstatus::Stop)
+	if (line0.rollstatus == LineLogic::Rollstatus::Stop && line1.rollstatus == LineLogic::Rollstatus::Stop &&
+		line2.rollstatus == LineLogic::Rollstatus::Stop)
 	{
 		return true;
 	}
@@ -205,8 +204,6 @@ void Board::DrawBorders(Graphics& gfx) const
 	gfx.DrawRectLines(BorderRect, Colors::Blue);
 }
 
-
-
 bool Board::CheckWin() const
 {
 	std::vector<int> win;
@@ -224,5 +221,39 @@ int Board::CalculateWin() const
 void Board::DrawWinLine(Graphics& gfx) const
 {
 	gfx.DrawRect(BorderRect.left, WinLinePos.y - 2, BorderRect.right, WinLinePos.y + 2, Colors::Red);
+}
+
+void Board::MoveLine(LineLogic& line, std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float dt)
+{
+	for (auto& i : gfxline)
+	{
+		i.MoveFruit(dt);
+		if (i.GetPos().y >= resetpos.y)
+		{
+			if (line.rollstatus == LineLogic::Rollstatus::Slow) //if slow mode, this block makes sure that right fruit appear after 7 fails
+			{
+				if (line.testcounter == 7)
+				{
+					i.GfxFruit = line.GetFruit();
+					line.testcounter = 0;
+				}
+				else
+				{
+					i.GfxFruit = rng.rngtest(0, 8);
+					line.testcounter += 1;
+				}
+			}
+			else
+			{
+				i.GfxFruit = rng.rngtest(0, 8);
+			}
+			float t = i.pos.y - 430.0f;
+			for (auto& s : gfxline)	//Correcting fruit line position, no caps appearing between fruits
+			{
+				s.pos.y -= t;
+			}
+			i.pos = StartPos;		//Moving fruit back to the top
+		}
+	}
 }
 

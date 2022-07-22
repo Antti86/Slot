@@ -4,11 +4,11 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include "LineLogic.h"
 
 
 class Board
 {
-	
 public:
 	Board(const Vei2 topleft);
 	//Interface func
@@ -22,12 +22,13 @@ public:
 	bool AllStop() const;
 	void SetBet(char plus_minus); //Incr or Decr bet based on parameter "+", "-"
 private:
-	//Rolling checks and logig
-	void RollLines(Fruits& line, Fruits* previous, std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float rolltime, float dt);
+	//Rolling checks and logic
+	void RollLines(LineLogic& line, LineLogic* previous, std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float rolltime, float dt);
 	void DrawBorders(Graphics& gfx) const;
 	bool CheckWin() const;
 	int CalculateWin() const; //Dont call this without CheckWin first
 	void DrawWinLine(Graphics& gfx) const;
+	void MoveLine(LineLogic& line, std::vector<Fruits>& gfxline, const Vec2& StartPos, const Vec2& resetpos, float dt);
 private:
 	const Vei2 topleft;
 	const RectI BorderRect = { topleft.x, topleft.x + width, topleft.y, topleft.y + height };
@@ -46,9 +47,9 @@ private:
 	Vec2 resetpos1 = { Line0Pos.x, (float)topleft.y + (float)height };
 	Vec2 resetpos2 = { Line0Pos.x, (float)topleft.y + (float)height };
 
-	Fruits line0;
-	Fruits line1;
-	Fruits line2;
+	LineLogic line0;
+	LineLogic line1;
+	LineLogic line2;
 
 	std::vector<Fruits> gfxline0;
 	std::vector<Fruits> gfxline1;
