@@ -8,9 +8,9 @@ Board::Board(const Vei2 topleft)
 
 	for (int i = 0; i < 4; i++)
 	{
-		gfxline0.emplace_back(Fruits(Line0Pos, rng.rngtest(0, 8)));
-		gfxline1.emplace_back(Fruits(Line1Pos, rng.rngtest(0, 8)));
-		gfxline2.emplace_back(Fruits(Line2Pos, rng.rngtest(0, 8)));
+		gfxline0.emplace_back(Fruits(Line0Pos, rng.CreateInt(0, 7)));
+		gfxline1.emplace_back(Fruits(Line1Pos, rng.CreateInt(0, 7)));
+		gfxline2.emplace_back(Fruits(Line2Pos, rng.CreateInt(0, 7)));
 		Line0Pos.y += 70 + borderheight;
 		Line1Pos.y += 70 + borderheight;
 		Line2Pos.y += 70 + borderheight;
@@ -88,7 +88,6 @@ void Board::UpdateLogic()
 				break;
 			}
 		}
-		
 	}
 	line2.Procces();
 
@@ -159,7 +158,7 @@ void Board::RollLines(LineLogic& line, LineLogic* previous, std::vector<Fruits>&
 		{
 			i.SetSpeed(300.0f);
 		}
-		for (auto& i : gfxline) //Checks that the logig fruit is the same as graphics fruit and that gfx fruit is in the winline
+		for (auto& i : gfxline) //Checks that the logic fruit is the same as graphics fruit and that gfx fruit is in the winline
 		{
 			if (i.GfxFruit == line.GetFruit() && i.GetPos().y + 35 >= WinLinePos.y - 1 && i.GetPos().y + 35 <= WinLinePos.y + 1)
 			{
@@ -239,13 +238,13 @@ void Board::MoveLine(LineLogic& line, std::vector<Fruits>& gfxline, const Vec2& 
 				}
 				else
 				{
-					i.GfxFruit = rng.rngtest(0, 8);
+					i.GfxFruit = rng.CreateInt(0, 7);
 					line.testcounter += 1;
 				}
 			}
 			else
 			{
-				i.GfxFruit = rng.rngtest(0, 8);
+				i.GfxFruit = rng.CreateInt(0, 7);
 			}
 			float t = i.pos.y - 430.0f;
 			for (auto& s : gfxline)	//Correcting fruit line position, no caps appearing between fruits

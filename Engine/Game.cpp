@@ -49,17 +49,12 @@ void Game::UpdateModel(float dt)
 {
 	Keyboard::Event ke = wnd.kbd.ReadKey();
 	Mouse::Event me = wnd.mouse.Read();
-	//if (e.IsPress() && e.GetCode() == VK_SPACE)
-	//{
-	//	//for (int i = 0; i < 1000000; i++)
-	//	//{
-	//	//	
-	//	//}
-	//	brd.UpdateLogic();
-	//}
-
 	if (Ic.RollActivation(brd, me, ke))
 	{
+		//for (int i = 0; i < 1000000; i++)
+		//{
+		//	
+		//}
 		brd.UpdateLogic();
 	}
 	Ic.ChangeBet(brd, me, ke);

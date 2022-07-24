@@ -3,7 +3,7 @@
 void LineLogic::Procces()
 {
 	rollstatus = Rollstatus::Fast;
-	Fruit = rng.rngtest(min, max);
+	Fruit = rng.CreateInt(min, max);
 	Fruit = TranslateFruitVal(Fruit);
 }
 

@@ -57,6 +57,7 @@ private:
 	Bencher b;
 	Board brd{Vec2(100.0f, 100.0f) };
 	InputCtrl Ic;
+	Rng rng;
 	float dt;
 	float elapsedtime;
 	

@@ -24,5 +24,5 @@ private:
 	Rng rng;
 	float TimerStart = 0;
 	static constexpr int min = 0;
-	static constexpr int max = 20;
+	static constexpr int max = 19;
 };

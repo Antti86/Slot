@@ -18,7 +18,7 @@ public:
 	//Getters
 	Vec2 GetPos() const;
 	RectI GetClippingRect() const;
-
+	int bet = 1;	//Encap this when tests are over!
 	bool AllStop() const;
 	void SetBet(char plus_minus); //Incr or Decr bet based on parameter "+", "-"
 private:
@@ -56,7 +56,7 @@ private:
 	std::vector<Fruits> gfxline2;
 	Rng rng;
 	Font font = { L"Kuvat//Consolas13x24.bmp" };
-	int bet = 1;
+	
 	int money = 0;
 	static constexpr int width = 330;
 	static constexpr int height = 330;

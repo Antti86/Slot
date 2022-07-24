@@ -15,4 +15,9 @@ private:
 	Vec2 RollBpos;
 	RectF RollB;
 
+	Vec2 BetMinusPos;
+	RectF BetMinusBox;
+
+	Vec2 BetPlusPos;
+	RectF BetPlusBox;
 };
