@@ -12,7 +12,7 @@ Font::Font(const std::wstring& filename)
 	assert(CharHeight * nRows == surface.GetHeight());
 }
 
-void Font::DrawTexts(const std::string& text, const Vei2& pos, Graphics& gfx, Color s) const
+void Font::DrawTexts(const std::string& text, const Vei2& pos, Graphics& gfx, Color s, int LineCap) const
 {
 	auto curpos = pos;
 	SpriteEffect::Substitute E{Colors::White, s };
@@ -21,7 +21,7 @@ void Font::DrawTexts(const std::string& text, const Vei2& pos, Graphics& gfx, Co
 		if (c == '\n')
 		{
 			curpos.x = pos.x;
-			curpos.y += CharHeight;
+			curpos.y += (CharHeight * LineCap);
 			continue;
 		}
 		else if (c >= firstchar + 1 && c <= lastchar)

@@ -11,7 +11,7 @@ class Font
 {
 public:
 	Font(const std::wstring& filename);
-	void DrawTexts(const std::string& text, const Vei2& pos, Graphics& gfx, Color s) const;
+	void DrawTexts(const std::string& text, const Vei2& pos, Graphics& gfx, Color s, int LineCap = 1) const;
 	int GetNumberOfLines(const std::string& text);
 	int GetcharWidth() const;
 	int GetcharHeight() const;

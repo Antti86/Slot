@@ -47,24 +47,65 @@ void Game::Go()
 
 void Game::UpdateModel(float dt)
 {
-	Keyboard::Event ke = wnd.kbd.ReadKey();
-	Mouse::Event me = wnd.mouse.Read();
-	if (Ic.RollActivation(brd, me, ke))
+	if (gs == GameScreen::MainMenu)
 	{
-		//for (int i = 0; i < 1000000; i++)
-		//{
-		//	
-		//}
-		brd.UpdateLogic();
+		int m = menu.ProcessMenu(wnd.kbd, wnd.mouse);
+		switch (m)
+		{
+		case 0:
+			gs = GameScreen::Slot;
+			break;
+		case 1:
+			gs = GameScreen::Exchange;
+			break;
+		case 2:
+			wnd.Kill();
+			break;
+		}
 	}
-	Ic.ChangeBet(brd, me, ke);
-	brd.UpdateGraphics(dt);
+	else if (gs == GameScreen::Slot)
+	{
+		Keyboard::Event ke = wnd.kbd.ReadKey();
+		Mouse::Event me = wnd.mouse.Read();
+		if (Ic.RollActivation(brd, me, ke))
+		{
+			//for (int i = 0; i < 1000000; i++)
+			//{
+			//	
+			//}
+			brd.UpdateLogic();
+		}
+		Ic.ChangeBet(brd, me, ke);
+		brd.UpdateGraphics(dt);
+	}
+	else if (gs == GameScreen::Exchange)
+	{
+
+	}
+
+	if (wnd.kbd.KeyIsPressed(VK_ESCAPE))
+	{
+		gs = GameScreen::MainMenu;
+	}
+
 
 }
 
 void Game::ComposeFrame()
 {
-	brd.Draw(gfx);
-	Ic.Draw(gfx);
+	if (gs == GameScreen::MainMenu)
+	{
+		menu.Draw(gfx);
+	}
+	else if (gs == GameScreen::Slot)
+	{
+		brd.Draw(gfx);
+		Ic.Draw(gfx);
+	}
+	else if (gs == GameScreen::Exchange)
+	{
+
+	}
+
 	
 }

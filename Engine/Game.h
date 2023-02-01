@@ -33,9 +33,16 @@
 #include "Font.h"
 #include "Board.h"
 #include "InputControl.h"
+#include "MenuScreens.h"
 
 class Game
 {
+	enum class GameScreen
+	{
+		MainMenu,
+		Slot,
+		Exchange
+	};
 public:
 	Game( class MainWindow& wnd );
 	Game( const Game& ) = delete;
@@ -58,7 +65,9 @@ private:
 	Board brd{Vec2(100.0f, 100.0f) };
 	InputCtrl Ic;
 	Rng rng;
+	Surface back = { L"Kuvat//sky_background_green_hills.bmp" };
+	MenuScreen menu{ "Slot\nExchange\nExit", Vei2(100, 100), Colors::Red, Colors::Blue, 2};
 	float dt;
 	float elapsedtime;
-	
+	GameScreen gs = GameScreen::MainMenu;
 };

@@ -1,46 +1,29 @@
 #include "MenuScreens.h"
 
-
-MenuScreen::MenuScreen(const std::string& text, const Surface& BackGround, const Vei2& in_textpos, Color textcolor, Color Pointercolor)
+MenuScreen::MenuScreen(const std::string& text, const Vei2& in_textpos, Color textcolor, Color Pointercolor, int LineCap,
+	Surface* BackGround)
 	:
 	menutext(text),
 	textpos(in_textpos),
 	BackGround(BackGround),
 	menucount(0),
 	textcolor(textcolor),
-	Pointercolor(Pointercolor)
+	Pointercolor(Pointercolor),
+	LineCap(LineCap)
 {
 	nlines = Menu.GetNumberOfLines(text);
 	SetSelectionPos();
+	menuRects = GetMenuRects();
 }
 
-MenuScreen::MenuScreen(const std::string& text, const Vei2& in_textpos, Color textcolor, Color Pointercolor)
-	:
-	menutext(text),
-	textpos(in_textpos),
-	menucount(0),
-	textcolor(textcolor),
-	Pointercolor(Pointercolor)
-	
+void MenuScreen::Draw(Graphics& gfx) const
 {
-	nlines = Menu.GetNumberOfLines(text);
-	SetSelectionPos();
-}
-
-
-
-
-void MenuScreen::DrawWithBackground(Graphics& gfx) const
-{
-	SpriteEffect::NoChroma E;
-	gfx.DrawSprite(Vei2(0, 0), BackGround, E);
-	Menu.DrawTexts(menutext, textpos, gfx, textcolor);
-	DrawSelectionPointer(gfx, SelPointPos);
-}
-
-void MenuScreen::DrawWithOutBackground(Graphics& gfx) const
-{
-	Menu.DrawTexts(menutext, textpos, gfx, textcolor);
+	if (BackGround != nullptr)
+	{
+		SpriteEffect::NoChroma E;
+		gfx.DrawSprite(Vei2(0, 0), *BackGround, E);
+	}
+	Menu.DrawTexts(menutext, textpos, gfx, textcolor, LineCap);
 	DrawSelectionPointer(gfx, SelPointPos);
 }
 
@@ -50,7 +33,7 @@ void MenuScreen::DrawSelectionPointer(Graphics& gfx, const Vei2& StartMenuP) con
 	gfx.DrawCircle(StartMenuP.x, StartMenuP.y, cRadius, Pointercolor);
 }
 
-void MenuScreen::MenuMovement(const Keyboard::Event& e) 
+void MenuScreen::MenuMovement(const Keyboard::Event& e, const Mouse::Event& me) 
 {
 	if (e.GetCode() == VK_UP && menucount > 0)
 	{
@@ -60,56 +43,63 @@ void MenuScreen::MenuMovement(const Keyboard::Event& e)
 	{
 		menucount += 1;
 	}
+	for (int i = 0; i < menuRects.size(); i++)
+	{
+		if (me.LeftIsPressed())
+		{
+			if (menuRects[i].IsInside(me.GetPos()))
+			{
+				menucount = i;
+			}
+		}
+
+	}
 }
 
 void MenuScreen::SetSelectionPos()
 {
 	SelPointPos.x = textpos.x - 30;
-	SelPointPos.y = (textpos.y + (Menu.GetcharHeight() / 2)) + (menucount * Menu.GetcharHeight());
+	SelPointPos.y = (textpos.y + (Menu.GetcharHeight() / 2)) + ((menucount * Menu.GetcharHeight()) * LineCap);
 }
 
+std::vector<RectI> MenuScreen::GetMenuRects()
+{
+	std::vector<RectI> ret;
+	int x = 0;
+	int y = 0;
+	for (int i = 0; i < menutext.size(); i++)
+	{
+		if (menutext[i] != '\n' && i != menutext.size() - 1)
+		{
+			x++;
+		}
+		else
+		{
+			if (i == menutext.size() - 1)
+			{
+				x++;
+			}
+			int width = Menu.GetcharWidth() * x;
+			int ypos = textpos.y + ((y * Menu.GetcharHeight()) * LineCap);
+			ret.emplace_back(textpos.x, textpos.x + width, ypos, ypos + Menu.GetcharHeight());
+			x = 0;
+			y++;
+		}
+	}
+	return ret;
+}
 
-
-MenuScreen::Options MenuScreen::ProcessMenu(Keyboard& kbd) 
+int MenuScreen::ProcessMenu(Keyboard& kbd, Mouse& mous)
 {
 	SetSelectionPos();
 	const Keyboard::Event e = kbd.ReadKey();
-	if (e.IsPress())
+	const Mouse::Event me = mous.Read();
+	MenuMovement(e, me);
+	if ((e.IsPress() && e.GetCode() == VK_RETURN) || me.LeftIsPressed() )
 	{
-		MenuMovement(e);
-		if (e.GetCode() == VK_RETURN)
-		{
-			if (menucount == 0)
-			{
-				return Options::Opt1;
-			}
-			else if (menucount == 1)
-			{
-				return Options::Opt2;
-			}
-			else if (menucount == 2)
-			{
-				return Options::Opt3;
-			}
-			else if (menucount == 3)
-			{
-				return Options::Opt4;
-			}
-			else if (menucount == 4)
-			{
-				return Options::Opt5;
-			}
-			else if (menucount == 5)
-			{
-				return Options::Opt6;
-			}
-			else if (menucount == 6)
-			{
-				return Options::Opt7;
-			}
-		}
+		return menucount;
 	}
-	return Options::Invalid;
+	return -1;
 }
 
 
