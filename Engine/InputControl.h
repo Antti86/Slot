@@ -2,6 +2,7 @@
 #include "Mouse.h"
 #include "Keyboard.h"
 #include "Board.h"
+#include "Surface.h"
 
 
 class InputCtrl
@@ -20,4 +21,6 @@ private:
 
 	Vec2 BetPlusPos;
 	RectF BetPlusBox;
+
+	Surface buttons;
 };
